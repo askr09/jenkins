@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                echo 'Source code is ready'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building web application...'
+                sh 'test -f index.html'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Testing web application...'
+                sh 'grep -q "Welcome to My DevOps Project!" index.html'
+                echo 'All tests passed!'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
+                sh 'mkdir -p deployed'
+                sh 'cp index.html deployed/index.html'
+                echo 'Application deployed successfully!'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
+
+        failure {
+            echo 'Pipeline failed. Check the console output.'
+        }
+    }
+}
